@@ -1,5 +1,6 @@
 ---
-
+import '../styles/global.css';
+import { ViewTransitions } from 'astro:transitions';
 ---
 
 <html lang="en">
@@ -8,9 +9,57 @@
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
+		<title>Love</title>
+		<ViewTransitions />
+		<style>
+			.character {
+				position: relative;
+				height: 100px;
+				width: 180px;
+			}
+			.character img {
+				position: absolute;
+				top: 0;
+				left: 0;
+				height: 100%;
+			}
+			.eyes-closed {
+				opacity: 0;
+				animation: blink 7s steps(1, end) infinite;
+			}
+			@keyframes blink {
+				0%, 100% { opacity: 0; }
+				48% { opacity: 0; }
+				50% { opacity: 1; }
+				65% { opacity: 0; }
+			}
+			.animate-pulse-slow {
+				animation: pulse-slow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+			}
+			@keyframes pulse-slow {
+				0%, 100% {
+					opacity: 1;
+					transform: scale(1);
+				}
+				50% {
+					opacity: 0.85;
+					transform: scale(1.05);
+				}
+			}
+		</style>
 	</head>
 	<body>
-		<h1>Astro</h1>
+		<div class="min-h-screen bg-gray-100 flex items-center justify-center px-4">
+			<div class="h-80 sm:h-96 md:h-100 flex items-end justify-center w-full max-w-4xl">
+				<img src="/src/assets/lonisticker.png" alt="loni" class="h-full object-contain"/>
+				<div class="w-auto -mr-8 sm:-mr-12 -ml-12 sm:-ml-20 relative flex-shrink-0">
+					<img src="/src/assets/mesa2.png" alt="mesa" class="w-full max-w-80 sm:max-w-100 md:max-w-120"/>
+					<a href="/ticket" class="cursor-pointer hover:scale-110 active:scale-95 transition-transform duration-300">
+						<img src="/src/assets/gift.png" alt="regalo" class="absolute bottom-32 sm:bottom-42 left-1/2 -translate-x-1/2 h-32 sm:h-40 md:h-50 animate-pulse-slow"/>
+					</a>
+				</div>
+				<img src="/src/assets/betosticker.png" alt="beto" class="h-4/5 mb-3 sm:mb-5 z-10 object-contain" />
+			</div>
+		</div>
 	</body>
 </html>

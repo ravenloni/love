@@ -1,0 +1,281 @@
+---
+import '../styles/global.css';
+import { ViewTransitions } from 'astro:transitions';
+---
+
+<html lang="es">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Museo del Prado - Ticket</title>
+		<ViewTransitions />
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;600&family=Libre+Franklin:wght@300;400;500;700&display=swap" rel="stylesheet">
+		<style>
+			.barcode-pattern {
+				background-image:
+					linear-gradient(90deg, #000 0px, #000 2px, transparent 2px, transparent 5px),
+					linear-gradient(90deg, transparent 0px, transparent 5px, #000 5px, #000 8px, transparent 8px, transparent 10px),
+					linear-gradient(90deg, transparent 0px, transparent 10px, #000 10px, #000 11px, transparent 11px, transparent 14px),
+					linear-gradient(90deg, transparent 0px, transparent 14px, #000 14px, #000 17px, transparent 17px, transparent 19px),
+					linear-gradient(90deg, transparent 0px, transparent 19px, #000 19px, #000 20px, transparent 20px, transparent 22px),
+					linear-gradient(90deg, transparent 0px, transparent 22px, #000 22px, #000 25px, transparent 25px, transparent 28px),
+					linear-gradient(90deg, transparent 0px, transparent 28px, #000 28px, #000 29px, transparent 29px, transparent 31px),
+					linear-gradient(90deg, transparent 0px, transparent 31px, #000 31px, #000 34px, transparent 34px, transparent 36px),
+					linear-gradient(90deg, transparent 0px, transparent 36px, #000 36px, #000 37px, transparent 37px, transparent 40px);
+				background-size: 40px 100%;
+				background-repeat: repeat-x;
+			}
+
+			.vertical-line {
+				background: repeating-linear-gradient(
+					0deg,
+					#ddd 0px,
+					#ddd 1px,
+					transparent 1px,
+					transparent 8px
+				);
+			}
+
+			body {
+				font-family: 'Libre Franklin', sans-serif;
+			}
+
+			h1, h2 {
+				font-family: 'Playfair Display', serif;
+			}
+
+			.ticket-enter {
+				animation: slideUp 0.8s ease-out;
+			}
+
+			/* Sobrescribir todos los colores Tailwind con hex para compatibilidad con html2canvas */
+			#ticket-content * {
+				color: inherit !important;
+			}
+
+			#ticket-content {
+				background-color: #ffffff !important;
+				box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+			}
+
+			#ticket-content .text-zinc-800,
+			#ticket-content h2 { color: #27272a !important; }
+
+			#ticket-content .text-zinc-900,
+			#ticket-content .text-4xl { color: #18181b !important; }
+
+			#ticket-content .text-zinc-600,
+			#ticket-content .text-sm { color: #52525b !important; }
+
+			#ticket-content .text-zinc-700 { color: #3f3f46 !important; }
+
+			#ticket-content .text-zinc-500,
+			#ticket-content .text-\[10px\],
+			#ticket-content .text-xs { color: #71717a !important; }
+
+			#ticket-content .text-zinc-400,
+			#ticket-content .text-\[9px\] { color: #a1a1aa !important; }
+
+			#ticket-content .bg-white { background-color: #ffffff !important; }
+
+			#ticket-content svg {
+				color: currentColor !important;
+				stroke: currentColor !important;
+				fill: currentColor !important;
+			}
+
+			#ticket-content .vertical-line {
+				background: repeating-linear-gradient(0deg, #dddddd 0px, #dddddd 1px, transparent 1px, transparent 8px) !important;
+			}
+
+			#ticket-content .border-zinc-300 {
+				border-color: #d4d4d8 !important;
+			}
+
+			@keyframes slideUp {
+				from {
+					opacity: 0;
+					transform: translateY(30px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+		</style>
+	</head>
+	<body class="min-h-screen flex items-center justify-center p-4 sm:p-5 relative" style="background: linear-gradient(to bottom right, #e7e5e4, #f5f5f4, #f4f4f5);">
+
+		<!-- Botón de volver -->
+		<a href="/" class="absolute top-4 left-4 sm:top-6 sm:left-6 flex items-center gap-2 text-zinc-600 hover:text-zinc-900 transition-colors duration-300 group z-10">
+			<svg class="w-5 h-5 transform group-hover:-translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+			</svg>
+			<span class="text-sm font-medium hidden sm:inline">Volver</span>
+		</a>
+
+		<!-- Botón de descarga - Deshabilitado temporalmente
+		<button id="download-ticket" class="absolute top-4 right-4 sm:top-6 sm:right-6 flex items-center gap-2 bg-zinc-800 text-white px-4 py-2 rounded-lg hover:bg-zinc-900 transition-colors duration-300 group z-10">
+			<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+			</svg>
+			<span class="text-sm font-medium hidden sm:inline">Descargar</span>
+		</button>
+		-->
+
+		<!-- Ticket Horizontal Minimalista -->
+		<div id="ticket-content" class="w-full max-w-5xl bg-white shadow-xl flex flex-col md:flex-row overflow-hidden ticket-enter rounded-lg md:rounded-none">
+
+			<!-- Lado Izquierdo - Info -->
+			<div class="md:w-1/3 p-6 sm:p-8 md:p-10 flex flex-col justify-between min-h-[400px] md:min-h-0">
+				
+				<!-- Header -->
+				<div>
+					<div class="mb-6 sm:mb-8">
+						<h2 class="text-lg sm:text-xl font-bold tracking-[0.2em] sm:tracking-[0.3em] text-zinc-800 mb-1">MUSEO DEL PRADO</h2>
+						<p class="text-[10px] text-zinc-500 uppercase tracking-wider">Entrada Virtual</p>
+					</div>
+
+					<!-- Fecha y Hora -->
+					<div class="mb-8">
+						<div class="text-4xl font-light text-zinc-900 mb-1">15.01</div>
+						<div class="text-sm text-zinc-600 mb-2">2026</div>
+						<div class="flex items-center gap-2 text-xs text-zinc-500">
+							<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+							</svg>
+							<span id="visit-time">20:00 hrs</span>
+						</div>
+					</div>
+
+					<!-- Mensaje Especial -->
+					<div class="mb-4 sm:mb-6">
+						<p class="text-xs leading-relaxed text-zinc-600">
+							Un año más juntos merece algo especial. Esta noche recorreremos virtualmente
+							los pasillos del Prado, admirando arte, conversando y creando nuevos recuerdos.
+							Como si estuviéramos allí, tomados de la mano.
+						</p>
+					</div>
+				</div>
+
+				<!-- Footer Info -->
+				<div>
+					<div class="text-[10px] text-zinc-500 mb-4">
+						<p>Paseo del Prado, s/n</p>
+						<p>28014 Madrid, España</p>
+					</div>
+
+					<!-- Código de barras horizontal -->
+					<div class="border border-zinc-300 p-2 rounded inline-block bg-white">
+						<div class="barcode-pattern h-14 w-40"></div>
+					</div>
+					<p class="text-[9px] text-zinc-400 mt-2 font-mono tracking-widest">879338</p>
+				</div>
+			</div>
+
+			<!-- Línea divisoria vertical -->
+			<div class="w-px vertical-line hidden md:block"></div>
+
+			<!-- Lado Derecho - Imagen -->
+			<div class="md:w-2/3 relative">
+				<img
+					src="/prado-painting.jpg"
+					alt="Museo del Prado"
+					class="w-full h-full object-cover"
+					id="ticket-image"
+				/>
+
+				<!-- Overlay sutil -->
+				<div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+			</div>
+
+		</div>
+
+		<script>
+			import domtoimage from 'dom-to-image-more';
+
+			// Calcular hora dinámica (hora actual redondeada)
+			function setVisitTime() {
+				const now = new Date();
+				const hours = String(now.getHours()).padStart(2, '0');
+				const timeElement = document.getElementById('visit-time');
+				if (timeElement) {
+					timeElement.textContent = `${hours}:00 hrs`;
+				}
+			}
+
+			// Función para descargar como imagen
+			async function downloadTicket() {
+				const ticketElement = document.getElementById('ticket-content');
+				const downloadBtn = document.getElementById('download-ticket');
+				const backBtn = document.querySelector('a[href="/"]') as HTMLElement;
+
+				if (!ticketElement) {
+					alert('No se pudo encontrar el ticket para descargar.');
+					return;
+				}
+
+				try {
+					// Ocultar botones temporalmente
+					if (downloadBtn) downloadBtn.style.display = 'none';
+					if (backBtn) backBtn.style.display = 'none';
+
+					// Esperar un poco para que se actualice la UI
+					await new Promise(resolve => setTimeout(resolve, 100));
+
+					// Usar dom-to-image-more que soporta oklch/oklab
+					const dataUrl = await domtoimage.toPng(ticketElement, {
+						quality: 1,
+						width: 1200,
+						height: ticketElement.offsetHeight,
+						style: {
+							transform: 'scale(2)',
+							transformOrigin: 'top left',
+							width: ticketElement.offsetWidth + 'px',
+							height: ticketElement.offsetHeight + 'px'
+						}
+					});
+
+					// Descargar imagen
+					const link = document.createElement('a');
+					link.download = 'museo-del-prado-ticket.png';
+					link.href = dataUrl;
+					link.click();
+
+				} catch (error) {
+					console.error('Error completo:', error);
+					alert('Error al descargar: ' + (error instanceof Error ? error.message : 'Desconocido'));
+				} finally {
+					// Mostrar botones de nuevo
+					if (downloadBtn) downloadBtn.style.display = 'flex';
+					if (backBtn) backBtn.style.display = 'flex';
+				}
+			}
+
+			// Inicializar al cargar la página
+			document.addEventListener('DOMContentLoaded', () => {
+				setVisitTime();
+
+				const downloadBtn = document.getElementById('download-ticket');
+				if (downloadBtn) {
+					downloadBtn.addEventListener('click', downloadTicket);
+				}
+			});
+
+			// También para transiciones de Astro
+			document.addEventListener('astro:page-load', () => {
+				setVisitTime();
+
+				const downloadBtn = document.getElementById('download-ticket');
+				if (downloadBtn) {
+					downloadBtn.addEventListener('click', downloadTicket);
+				}
+			});
+		</script>
+
+	</body>
+</html>

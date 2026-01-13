@@ -9,6 +9,9 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.15.8"
+    "@tailwindcss/vite": "^4.1.17",
+    "astro": "^5.15.8",
+    "dom-to-image-more": "^3.7.2",
+    "tailwindcss": "^4.1.17"
   }
 }
