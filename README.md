@@ -1,10 +1,8 @@
-# Astro Starter Kit: Minimal
+# Love - Museo del Prado Virtual
 
-```sh
-pnpm create astro@latest -- --template minimal
-```
+Un regalo de aniversario especial: una cita virtual al Museo del Prado.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+🎁 **[Ver sitio en vivo](https://ravenloni.github.io/love)**
 
 ## 🚀 Project Structure
 
